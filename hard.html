@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+        body{
+            width: 100%;
+            height: auto;
+            background-image: linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)), url(bg.jpg);
+            background-size: cover;
+            background-position: center;
+            counter-reset:sn;
+        }
+        h1{
+            color: white;
+        }
+        #form{
+            width: 500px;
+            height: 620px;
+            margin: auto;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent white;
+            box-shadow: 0 10px 30px rgba(255, 255, 0255, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 100px;
+        }
+        input {
+            width: 70%;
+            padding: 12px;
+            border: 1px solid black;
+            border-radius: 10px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            resize: vertical;
+        }
+        #result{
+            width: auto;
+            height: auto;
+            margin: 50px;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent white;
+            box-shadow: 1px 1px 1px 1px rgba(255, 255, 255, 0.9);
+            padding: 50px;
+        }
+        button{
+            cursor: pointer;
+            background-color: transparent;
+            border: 1px solid white;
+            color: red;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            width: 100px;
+        }
+        table, td, th {
+            border: transparent white;
+        }
+  
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th {
+            height: 50px;
+        }
+        p{
+            color: white;
+        }
+        .result td:first-child:before {
+            counter-increment:sn;
+            content:counter(sn);
+        }
+    </style>
+</head>
+<body>
+    
+    <form id="form">
+        <h1>Inventory Manager</h1><br>
+        <input type="text" id="sn" placeholder="Serial Number" style="opacity: 0">
+        <input type="date" id="d" placeholder="Date">
+        <input type="text" id="pi" placeholder="Product ID">
+        <input type="text" id="pn" placeholder="Product Name">
+        <input type="text" id="pc" placeholder="Product Category">
+        <input type="number" id="up" placeholder="Unit Price">
+        <input type="number" id="us" placeholder="Unit Sold">
+
+        <br>
+        <button id="addBtn" onclick="Apply(event)">Insert</button>
+
+    </form>
+
+    <br>
+
+    <div class="buttons">
+        <button id="deleteBtn" onclick="Delete()">Delete</button>
+        <button id="updateBtn" onclick="Update()">Update</button>
+    </div>
+
+    <br>
+
+    <div class="result">
+    <div id="result" style="margin-top: 50px">
+        <table>
+            <thead>
+                <tr>
+                    <th>Serial Number</th>
+                    <th>Purchase Date</th>
+                    <th>Product ID</th>
+                    <th>Product Name</th>
+                    <th>Product Category</th>                 
+                    <th>Unit Price</th>
+                    <th>Unit Sold</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+             
+            </tbody>
+        </table>
+    </div>
+    </div>
+</body>
+
+<script>
+    const result = document.getElementById("result");
+    const form = document.getElementById("form");
+    const sn = document.getElementById("sn");
+    const d = document.getElementById("d");
+    const pi = document.getElementById("pi");
+    const pn = document.getElementById("pn");
+    const pc = document.getElementById("pc");
+    const up = document.getElementById("up");
+    const us = document.getElementById("us");
+    const snacks = document.getElementById("snacks");
+    const drinks = document.getElementById("drinks");
+    const candies = document.getElementById("candies");
+    const tablebody = result.querySelector("table tbody");
+
+    const submitBtn = document.getElementById("addBtn");
+    const deleteBtn = document.getElementById("deleteBtn");
+    const updateBtn = document.getElementById("updateBtn");
+
+    let INSERTEDCOUNT = 0;
+
+    let SELECTED = [];
+
+    function CreateTD(text) {
+        const td = document.createElement("td");
+
+
+        td.innerHTML = text;
+
+        return td;
+    }
+
+    function CreateTR() {
+        const tr = document.createElement("tr");
+
+        INSERTEDCOUNT++;
+
+        tr.setAttribute("data-id", "row-" + (INSERTEDCOUNT));
+
+        return tr;
+    }
+
+    function Display(TR) {
+        const tds = TR.querySelectorAll("td");
+
+        let _sn = tds[0].innerText;
+        let _d = tds[1].innerText;
+        let _pi = tds[2].innerText;
+        let _pn = tds[3].innerText;
+        let _pc = tds[4].innerText;
+        let _up = tds[5].innerText;
+        let _us = tds[6].innerText;
+        
+        sn.value = _sn;
+        d.value = _d;
+        pi.value = _pi;
+        pn.value = _pn;
+        pc.value = _pc;
+        up.value = _up;
+        us.value = _us;
+
+    }
+
+    function Listen(TR) {
+        const table = result.querySelector("table");
+
+        const items = table.querySelectorAll("tbody tr");
+
+        if (!items.length) return
+
+        const resetActive = function () {
+            for (const i of items) {
+                 i.classList.remove("active");
+            }
+        }
+
+        const makeActive = function (item, bool) {
+            if (bool) {
+                item.classList.add("active");
+            } else {
+                item.classList.remove("active");
+            }
+        }
+
+        const updateActives = () => {
+            resetActive();
+
+            for (const selectedItem of SELECTED) {
+                for (let i = 0; i < items.length; i++) {
+                    const id = items[i].getAttribute("data-id");
+
+                    if (id === selectedItem) {
+                        makeActive(items[i], true);
+                    }
+                }
+            }
+
+            submitBtn.style.display = SELECTED.length === 0 ? "inline-block" : "none"; 
+            updateBtn.style.display = SELECTED.length === 1 ? "inline-block" : "none"; 
+            deleteBtn.style.display = SELECTED.length > 0 ? "inline-block" : "none"; 
+
+
+            if (SELECTED.length === 0) {
+                form.reset();
+            }
+        }
+
+        if (TR) {
+
+            TR.addEventListener("click", function (event) {
+                const id = TR.getAttribute("data-id");
+                const isAlreadySelected = SELECTED.includes(id);
+
+                if (isAlreadySelected) {
+
+                    if (event.shiftKey) {
+                        SELECTED = SELECTED.filter((_id) => _id !== id);
+                    } else {
+                        SELECTED = [id];
+                    }
+                } else {
+                    if (event.shiftKey) {
+
+                        SELECTED.push(id);
+                    } else {
+                        SELECTED = [id];
+                    }
+
+                    Display(TR);
+                }
+
+
+                updateActives();
+            });
+        }
+
+        updateActives();
+
+    }
+
+    function Apply(e) {
+
+        e.preventDefault();
+
+        const tr = CreateTR();
+
+        const total = CreateTD(up.value * us.value);
+
+        tr.appendChild(CreateTD(sn.value));
+        tr.appendChild(CreateTD(d.value));
+        tr.appendChild(CreateTD(pi.value));
+        tr.appendChild(CreateTD(pn.value));
+        tr.appendChild(CreateTD(pc.value));
+        tr.appendChild(CreateTD(up.value));
+        tr.appendChild(CreateTD(us.value));
+        tr.appendChild(total);
+        
+
+
+        tablebody.appendChild(tr);
+
+        Listen(tr);
+    }
+
+    function Delete() {
+        const confirmAction = confirm("Do you really want to delete " + SELECTED.length + " items?");
+        const table = result.querySelector("table");
+
+        const items = table.querySelectorAll("tbody tr");
+
+        if (confirmAction) {
+            for (const item of items) {
+                const id = item.getAttribute("data-id");
+
+                if (SELECTED.includes(id)) {
+                    item.remove();
+                    
+                    SELECTED = SELECTED.filter((_id => _id !== id));
+                }
+            }
+        }
+
+
+        form.reset();
+
+       Listen("");
+    }
+
+    function Update() {
+        const table = result.querySelector("table");
+
+        const items = table.querySelectorAll("tbody tr");
+
+        if (!items.length) return;
+
+        for (const item of items) {
+            const id = item.getAttribute("data-id");
+
+            if (id === SELECTED[0]) {
+                const tds = item.querySelectorAll("td");
+                tds[0].innerText = sn.value;
+                tds[1].innerText = d.value;
+                tds[2].innerText = pi.value;
+                tds[3].innerText = pn.value;
+                tds[4].innerText = pc.value;
+                tds[5].innerText = up.value;
+                tds[6].innerText = us.value;
+                tds[7].innerText = up.value * us.value;
+
+            }
+        }
+    }
+
+    Listen();
+
+</script>
+</html>

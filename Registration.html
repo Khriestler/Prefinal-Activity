@@ -1,0 +1,398 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+        body{
+            width: 100%;
+            height: auto;
+            background-image: linear-gradient(rgba(13,39,87,1),rgba(108,135,190,1));
+            background-size: cover;
+            background-position: center;
+        }
+        h1{
+            color: black;
+        }
+        #form{
+            width: 700px;
+            height: 420px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 100px;
+        }
+        input {
+            width: 30%;
+            padding: 15px;
+            position: relative;
+            border: 1px solid black;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        #result{
+            width: auto;
+            height: auto;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent white;
+            box-shadow: 1px 1px 1px 1px rgba(255, 255, 255, 0.9);
+            padding: 50px;
+        }
+        button{
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid black;
+            color: red;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            width: 100px;
+        }
+        table, td, th {
+            border: transparent white;
+        }
+  
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            color: white
+        }
+        th {
+            height: 10px;
+            color: white
+        }
+    </style>
+</head>
+<body>
+    <form id="form">
+        <h1>Student Registration</h1><br>
+        <input type="number" id="SN" placeholder="Student Number">
+        <input type="text" id="LN" placeholder="Last Name">
+        <input type="text" id="GN" placeholder="First Name">
+        <input type="text" id="MN" placeholder="Middle Name">
+        <input type="text" id="GEN" placeholder="Gender">
+        <input type="number" id="SY" placeholder="School Year">
+        <input type="text" id="ADS" placeholder="Address">
+        <input type="number" id="YL" placeholder="Year Level">
+        <input type="number" id="SEM" placeholder="Semester">
+        <input type="text" id="CODE" placeholder="CODE">
+        <input type="text" id="ST" placeholder="Subject Title">
+        <input type="number" id="UNITS" placeholder="Units">
+        <input type="text" id="SEC" placeholder="Section">
+        <input type="time" id="TIME" placeholder="Time">
+        <input type="number" id="DAYS" placeholder="Days">
+        <input type="text" id="ROOM" placeholder="Room">
+        <input type="number" id="FG" placeholder="Final Grade">
+        <br>
+        <br>
+        <button id="addBtn" onclick="Apply(event)">Insert</button>
+
+    </form>
+
+    <div class="buttons">
+        <br>
+        <button id="deleteBtn" onclick="Delete()">Delete</button>
+        <button id="updateBtn" onclick="Update()">Update</button>
+    </div>
+
+    <br>
+
+    <div id="result" style="margin-top: 50px">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Number</th>
+                    <th>Last Name</th>
+                    <th>Given Name</th>
+                    <th>Middle Name</th>
+                    <th>Gender</th>                 
+                    <th>S.Y</th>
+                    <th>Address</th>
+                    <th>Year Level</th>
+                    <th>Semester</th>
+                    <th>Code</th>
+                    <th>Subject Title</th>
+                    <th>Units</th>
+                    <th>Section</th>
+                    <th>Time</th>
+                    <th>Days</th>
+                    <th>Room</th>
+                    <th>Final Grade</th>
+                </tr>
+            </thead>
+        <tbody>
+         
+        </tbody>
+        </table>
+    </div>
+</body>
+
+<script>
+    const result = document.getElementById("result");
+    const form = document.getElementById("form");
+    const SN = document.getElementById("SN");
+    const LN = document.getElementById("LN");
+    const GN = document.getElementById("GN");
+    const MN = document.getElementById("MN");
+    const GEN = document.getElementById("GEN");
+    const CY = document.getElementById("SY");
+    const ADS = document.getElementById("ADS");
+    const YL = document.getElementById("YL");
+    const SEM = document.getElementById("SEM");
+    const CODE = document.getElementById("CODE");
+    const ST = document.getElementById("ST");
+    const UNITS = document.getElementById("UNITS");
+    const SEC = document.getElementById("SEC");
+    const TIME = document.getElementById("TIME");
+    const DAYS = document.getElementById("DAYS");
+    const ROOM = document.getElementById("ROOM");
+    const FG = document.getElementById("FG");
+
+    const tablebody = result.querySelector("table tbody");
+    const submitBtn = document.getElementById("addBtn");
+    const deleteBtn = document.getElementById("deleteBtn");
+    const updateBtn = document.getElementById("updateBtn");
+
+    let INSERTEDCOUNT = 0;
+
+    let SELECTED = [];
+
+    function CreateTD(text) {
+        const td = document.createElement("td");
+
+
+        td.innerHTML = text;
+
+        return td;
+    }
+
+    function CreateTR() {
+        const tr = document.createElement("tr");
+
+        INSERTEDCOUNT++;
+
+        tr.setAttribute("data-id", "row-" + (INSERTEDCOUNT));
+
+        return tr;
+    }
+
+    function Display(TR) {
+        const tds = TR.querySelectorAll("td");
+
+        let _SN = tds[0].innerText;
+        let _LN = tds[1].innerText;
+        let _GN = tds[2].innerText;
+        let _MN = tds[3].innerText;
+        let _GEN = tds[4].innerText;
+        let _SY = tds[5].innerText;
+        let _ADS = tds[6].innerText;
+        let _YL = tds[7].innerText;
+        let _SEM = tds[8].innerText;
+        let _CODE = tds[9].innerText;
+        let _ST = tds[10].innerText;
+        let _UNITS = tds[11].innerText;
+        let _SEC = tds[12].innerText;
+        let _TIME = tds[13].innerText;
+        let _DAYS = tds[14].innerText;
+        let _ROOM = tds[15].innerText;
+        let _FG = tds[16].innerText;
+
+        SN.value = _SN;
+        LN.value = _LN;
+        GN.value = _GN;
+        MN.value = _MN;
+        GEN.value = _GEN;
+        SY.value = _SY;
+        ADS.value = _ADS;
+        YL.value = _YL;
+        SEM.value = _SEM;
+        CODE.value = _CODE;
+        ST.value = _ST;
+        UNITS.value = _UNITS;
+        SEC.value = _SEC;
+        TIME.value = _TIME;
+        DAYS.value = _DAYS;
+        ROOM.value = _ROOM;
+        FG.value = _FG;
+
+        }
+
+    function Listen(TR) {
+        const table = result.querySelector("table");
+
+        const items = table.querySelectorAll("tbody tr");
+
+        if (!items.length) return
+
+        const resetActive = function () {
+            for (const i of items) {
+                i.classList.remove("active");
+            }
+        }
+
+        const makeActive = function (item, bool) {
+            if (bool) {
+                item.classList.add("active");
+            } else {
+                item.classList.remove("active");
+            }
+        }
+
+        const updateActives = () => {
+            resetActive();
+
+            for (const selectedItem of SELECTED) {
+                for (let i = 0; i < items.length; i++) {
+                    const id = items[i].getAttribute("data-id");
+
+                    if (id === selectedItem) {
+                        makeActive(items[i], true);
+                    }
+                }
+            }
+
+            submitBtn.style.display = SELECTED.length === 0 ? "inline-block" : "none"; 
+            updateBtn.style.display = SELECTED.length === 1 ? "inline-block" : "none"; 
+            deleteBtn.style.display = SELECTED.length > 0 ? "inline-block" : "none"; 
+
+
+            if (SELECTED.length === 0) {
+                form.reset();
+            }
+        }
+
+        if (TR) {
+
+            TR.addEventListener("click", function (event) {
+                const id = TR.getAttribute("data-id");
+                const isAlreadySelected = SELECTED.includes(id);
+
+                if (isAlreadySelected) {
+
+                    if (event.shiftKey) {
+                        SELECTED = SELECTED.filter((_id) => _id !== id);
+                    } else {
+                        SELECTED = [id];
+                    }
+                } else {
+                    if (event.shiftKey) {
+
+                        SELECTED.push(id);
+                    } else {
+                        SELECTED = [id];
+                    }
+
+                    Display(TR);
+                }
+
+
+                updateActives();
+            });
+        }
+
+        updateActives();
+
+    }
+
+    function Apply(e) {
+
+        e.preventDefault();
+
+        const tr = CreateTR();
+
+        tr.appendChild(CreateTD(SN.value));
+        tr.appendChild(CreateTD(LN.value));
+        tr.appendChild(CreateTD(GN.value));
+        tr.appendChild(CreateTD(MN.value));
+        tr.appendChild(CreateTD(GEN.value));
+        tr.appendChild(CreateTD(SY.value));
+        tr.appendChild(CreateTD(ADS.value));
+        tr.appendChild(CreateTD(YL.value));
+        tr.appendChild(CreateTD(SEM.value));
+        tr.appendChild(CreateTD(CODE.value));
+        tr.appendChild(CreateTD(ST.value));
+        tr.appendChild(CreateTD(UNITS.value));
+        tr.appendChild(CreateTD(SEC.value));
+        tr.appendChild(CreateTD(TIME.value));
+        tr.appendChild(CreateTD(DAYS.value));
+        tr.appendChild(CreateTD(ROOM.value));
+        tr.appendChild(CreateTD(FG.value));
+
+
+        tablebody.appendChild(tr);
+
+        Listen(tr);
+    }
+
+    function Delete() {
+        const confirmAction = confirm("Do you really want to delete " + SELECTED.length + " items?");
+        const table = result.querySelector("table");
+
+        const items = table.querySelectorAll("tbody tr");
+
+        if (confirmAction) {
+            for (const item of items) {
+                const id = item.getAttribute("data-id");
+
+                if (SELECTED.includes(id)) {
+                    item.remove();
+                
+                    SELECTED = SELECTED.filter((_id => _id !== id));
+                }
+            }
+        }
+
+
+        form.reset();
+
+        Listen("");
+    }
+
+    function Update() {
+        const table = result.querySelector("table");
+
+        const items = table.querySelectorAll("tbody tr");
+
+        if (!items.length) return;
+
+        for (const item of items) {
+            const id = item.getAttribute("data-id");
+
+            if (id === SELECTED[0]) {
+                const tds = item.querySelectorAll("td");
+                tds[0].innerText =  SN.value;
+                tds[1].innerText = LN.value;
+                tds[2].innerText = GN.value;
+                tds[3].innerText = MN.value;
+                tds[4].innerText = GEN.value;
+                tds[5].innerText = SY.value;
+                tds[6].innerText = ADS.value;
+                tds[7].innerText = YL.value;
+                tds[8].innerText = SEM.value;
+                tds[9].innerText = CODE.value;
+                tds[10].innerText = ST.value;
+                tds[11].innerText = UNITS.value;
+                tds[12].innerText = SEC.value;
+                tds[13].innerText = TIME.value;
+                tds[14].innerText = DAYS.value;
+                tds[15].innerText =  ROOM.value;
+                tds[16].innerText = FG.value;
+
+            }
+        }
+    }
+
+    Listen();
+
+</script>
+</html>

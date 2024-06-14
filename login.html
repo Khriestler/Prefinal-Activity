@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      *{
+          margin: 0;
+          padding: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          text-align: center;
+      }
+      body{
+        width: 100%;
+        height: auto;
+        background-image: linear-gradient(rgba(255,255,255,0.1),rgba(255,255,255,0.1)), url(bg.jpg);
+        background-size: cover;
+        background-position: center;
+      }
+      header{
+        color: white;
+        font-size: 50px;
+        background-color: rgba(0, 0, 0, 0.7);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        border-radius: 20px;
+      }
+      #login-form{
+        width: 300px;
+        height: 350px;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent white;
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        padding: 20px;
+        margin-top: 100px;
+      }
+      input {
+        width: 70%;
+        padding: 12px;
+        border: 1px solid black;
+        border-radius: 10px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+      }
+      button{
+        cursor: pointer;
+        background-color: transparent;
+        border: 1px solid white;
+        color: red;
+        padding: 10px;
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        width: 150px;
+        height: 40px;
+      }
+  </style>
+
+  </head>
+  <body>
+    <form id="login-form">
+      <header>Login</header><br>
+      <input type="text" name="username" placeholder="Enter Username" />
+      <input type="password" name="password" placeholder="Enter Password" />
+      <button type="submit" value="Log in">Login</button>
+    </section>
+  </body>
+
+  <script>
+
+  const form = document.getElementById('login-form');
+
+  function login(){
+    const data = new FormData(form);
+    const username = data.get('username');
+    const password = data.get('password');
+
+    if(username.length == 0){
+        alert("Please enter a Username");
+    }
+    else if (password.length == 0){
+        alert("Please enter a Password");
+    }
+    
+    else{
+        if (username=="cobra" && password=="kai")
+        {
+            alert("Login Successfully.")
+            open("Registration.html","_self")
+        }
+        else{
+            alert("Incorrect Username or Password! ")
+        }
+    }
+
+  }
+
+  form.addEventListener("submit",function(event)
+  { 
+    event.preventDefault();
+    login();
+  });
+
+  </script>
+
+</html>
+
